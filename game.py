@@ -55,25 +55,22 @@ from random import randint
 
 class Scene(object):
 	
-	def __init__(self):
-		pass
-	  # if current_room == 'white_room':
-	      # pass
+	def enter(self):
+		print("Error")
 
 class Engine(object):
 	
 	def __init__(self, scene_map):
 		self.scene_map = scene_map
-		self.last_scene = Map().next_scene("final_room")# scene_map.next_scene('final_room')
+		self.final_scene = Map('final_room').next_room()
 
 	def play(self):
-		current_scene = self.scene_map
-		last_scene = self.last_scene
-
-		while current_scene != last_scene:
+		for _ in range(4):
+			current_map = self.scene_map
+			current_scene = Map(current_map).next_room()
 			current_scene.enter()
 
-class White_room(Scene):
+class White_room(object):
 
 	def enter(self):
 		print("You are now in the white room.")
@@ -140,8 +137,10 @@ class Hero(object):
 
 class Map(object):
 
-	def next_scene(self, op_sc):
-		self.op_sc = op_sc
+	def __init__(self, the_scene):
+		self.the_scene = the_scene
+
+	def next_room(self):
 		scenes = {
 		'white_room': White_room(),
 		'central_corridor': Central_corridor(),
@@ -152,8 +151,7 @@ class Map(object):
 		'death': Death()
 		}
 
-		return scenes.get(self.op_sc)
+		return scenes.get(self.the_scene)
 
-my_map = Map()
-opening_scene = my_map.next_scene('white_room')
-Engine(opening_scene).play()
+
+Engine('white_room').play()
