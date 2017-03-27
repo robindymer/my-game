@@ -46,12 +46,12 @@ That person is your sister. They needed to transfer it succesive.
 from sys import exit
 from random import randint
 
+prompt = '--> '
 
 class Scene(object): # Add things here for the subclasses
-
-	def enter(self, scene):
-		self.scene = scene
-		Engine(self.scene).play()
+	
+	the_scene = None
+	enter_scene = Engine(the_scene).play()
 
 class Engine(object): # Running the rooms
 	
@@ -63,12 +63,39 @@ class Engine(object): # Running the rooms
 	def play(self):
 		self.class_scene.enter()
 
-class White_room(Scene):
+class White_room(Scene): # Look up a game engine online for inspiration
 
 	def enter(self):
-		print("You are now in the white room.")
+		print("You are dizzy and blended by a strong light source.")
+		print("You try to get up but you realize in the same moment")
+		print("that you are tied to a chair with handcuffs. What the")
+		print("hell is happening?")
+		print("Someone comes through the door and the first thing you")
+		print("notice is the key chain attached to the persons waist.")
+		print("You then look up and you see that it is a person with white")
+		print("clothes and looks much like a doctor. You decide to ask the")
+		print("doctor where you are but she doesn't reply. You repeat yourself")
+		print("but still no answer. She now takes a needle rolls up your sleeve.")
+		print("You notice that you can reach the keys. Do you (take) them or let her")
+		print("(inject) the liquid in the needle?")
+		choice = input(prompt)
 
-		Scene().enter('central_corridor')
+		if choice is 'take':
+			print("You pull the keys from her and she looks chocked and tries to grab them back")
+			print("You push her away and barely manage to open your handcuffs but you somehow do it.")
+			print("Now she comes charging at you with the needle and tries to stab you with it.")
+			print("Are you going to (flee) by running out of the door or try to (disarm) her?.")
+			choice = input(prompt)
+
+		elif choice is 'inject':
+			print("You feel a sting in your arm and fall asleep. You never woke up again...")
+			the scene = 'death'
+			enter_scene
+		
+		else:
+			print("There is no command of that choice.")
+			the_scene = 'white_room'
+			enter_scene
 
 class Central_corridor(Scene):
 
@@ -148,3 +175,5 @@ class Map(object):
 
 
 Engine('white_room').play()
+
+# Figure out the return thing, make the engine work!
