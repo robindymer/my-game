@@ -50,18 +50,25 @@ prompt = '--> '
 
 class Scene(object): # Add things here for the subclasses
 	
-	the_scene = None
-	enter_scene = Engine(the_scene).play()
+	def enter(self):
+		print("Error.")
+		exit(1)
 
 class Engine(object): # Running the rooms
-	
-	def __init__(self, scene_map):
-		self.scene_map = scene_map # Set this to the string name of the room
-		self.final_scene = Final_room() # Set self.final_scene to the final_room class
-		self.class_scene = Map(self.scene_map).next_room()
 
-	def play(self):
-		self.class_scene.enter()
+    def __init__(self, scene_map):
+        self.scene_map = scene_map
+
+    def play(self):
+        current_scene = self.scene_map.opening_scene()
+        last_scene = self.scene_map.next_scene('final_room')
+
+        while current_scene != last_scene:
+            next_scene_name = current_scene.enter()
+            current_scene = self.scene_map.next_scene(next_scene_name)
+
+        # be sure to print out the last scene
+        current_scene.enter()
 
 class White_room(Scene): # Look up a game engine online for inspiration
 
@@ -80,22 +87,31 @@ class White_room(Scene): # Look up a game engine online for inspiration
 		print("(inject) the liquid in the needle?")
 		choice = input(prompt)
 
-		if choice is 'take':
+		if choice == 'take':
 			print("You pull the keys from her and she looks chocked and tries to grab them back")
 			print("You push her away and barely manage to open your handcuffs but you somehow do it.")
 			print("Now she comes charging at you with the needle and tries to stab you with it.")
 			print("Are you going to (flee) by running out of the door or try to (disarm) her?.")
 			choice = input(prompt)
 
-		elif choice is 'inject':
+			if choice == 'flee':
+				return 'central_corridor'
+
+			elif choice == 'disarm':
+				return 'death'
+
+			else:
+				return 'death'
+
+		elif choice == 'inject':
 			print("You feel a sting in your arm and fall asleep. You never woke up again...")
-			the scene = 'death'
-			enter_scene
+			
+			return 'death'
 		
 		else:
 			print("There is no command of that choice.")
-			the_scene = 'white_room'
-			enter_scene
+
+			return 'white_room'
 
 class Central_corridor(Scene):
 
@@ -134,6 +150,9 @@ class Boss(object):
 		self.hp = hp
 		self.name = name
 
+	def boss_1(self, weapon):
+		self.weapon = 'Shovel'
+
 class Hero(object):
 
 	def __init__(self, name):
@@ -157,11 +176,7 @@ class Hero(object):
 
 class Map(object):
 
-	def __init__(self, the_scene):
-		self.the_scene = the_scene
-
-	def next_room(self):
-		scenes = {
+	scenes = {
 		'white_room': White_room(),
 		'central_corridor': Central_corridor(),
 		'wired_room': Wired_room(),
@@ -170,10 +185,20 @@ class Map(object):
 		'final_room': Final_room(),
 		'death': Death()
 		}
+    
+	def __init__(self, start_scene):
+		self.start_scene = start_scene
 
-		return scenes.get(self.the_scene)
+	def next_scene(self, scene_name):
+		val = Map.scenes.get(scene_name)
+		return val
+
+	def opening_scene(self):
+		return self.next_scene(self.start_scene)
 
 
-Engine('white_room').play()
+a_map = Map('white_room')
+a_game = Engine(a_map)
+a_game.play()
 
 # Figure out the return thing, make the engine work!
