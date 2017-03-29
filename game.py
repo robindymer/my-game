@@ -10,9 +10,7 @@ prompt = '--> '
 
 class Scene(object): # Add things here for the subclasses
 	
-	def enter(self):
-		print("Error.")
-		exit(1)
+	pass
 
 class Engine(object): # Running the rooms
 
@@ -24,7 +22,6 @@ class Engine(object): # Running the rooms
 		last_scene = self.scene_map.next_scene('final_room')
 
 		while current_scene != last_scene:
-			print(current_scene)
 			next_scene_name = current_scene.enter()
 			current_scene = self.scene_map.next_scene(next_scene_name)
 
@@ -37,7 +34,7 @@ class White_room(Scene): # Look up a game engine online for inspiration
 		print("You are dizzy and blended by a strong light source.")
 		print("You try to get up but you realize in the same moment")
 		print("that you are tied to a chair with handcuffs. What the")
-		print("hell is happening?")
+		print("hell is happening?\n")
 		print("Someone comes through the door and the first thing you")
 		print("notice is the key chain attached to the persons waist.")
 		print("You then look up and you see that it is a person with white")
@@ -49,35 +46,65 @@ class White_room(Scene): # Look up a game engine online for inspiration
 		choice = input(prompt)
 
 		if choice == 'take':
-			print("You pull the keys from her and she looks chocked and tries to grab them back")
+			print("\nYou pull the keys from her and she looks chocked and tries to grab them back")
 			print("You push her away and barely manage to open your handcuffs but you somehow do it.")
 			print("Now she comes charging at you with the needle and tries to stab you with it.")
 			print("Are you going to (flee) by running out of the door or try to (disarm) her?.")
 			choice = input(prompt)
 
 			if choice == 'flee':
-				return 'wired_room'
+				return 'central_corridor'
 
 			elif choice == 'disarm':
+				print("\nYou grab her hand with the needle in it but you can't hold it for more than")
+				print("a couple of seconds because of the dizziness. She manage to inject the needles liquid")
+
 				return 'death'
 
 			else:
-				return 'death'
+				print("\nThere is no command of that choice. Start over.\n")
+
+				return 'white_room'
 
 		elif choice == 'inject':
-			print("You feel a sting in your arm and fall asleep. You never woke up again...")
+			print("\nYou feel a sting in your arm and fall asleep. You never woke up again...")
 			
 			return 'death'
 		
 		else:
-			print("There is no command of that choice.")
+			print("\nThere is no command of that choice. Start over.\n")
 
 			return 'white_room'
 
 class Central_corridor(Scene):
 
-	def enter(self):
-		print("You are now in the central corridor.")
+	def enter(self): # Add your weapon in this class or another one
+		print("\nYou run out and quickly shut the door so she can't come out. Close one.")
+		print("You look around and see a long, white corridor. What is this place?")
+		print("You try to remember why you are here but nothing comes up.")
+		print("You try to remember your name but you just can't.")
+		print("You try to remember who you are and something, just something, but nothing")
+		print("comes to your mind.")
+		print("\nYou realize that you need to get of here as quickly as you can. This is not")
+		print("an ordinary hospital")
+		print("You see three doors with different text on each one")
+		print("The first door says 'Wired room', the second door says 'Lab' and the")
+		print("last door says 'Staff'. Which one do you enter?")
+		choice = input(prompt)
+
+		if choice == 'wired room':
+			return 'death'
+
+		elif choice == 'lab':
+			return 'death'
+
+		elif choice == 'staff':
+			return 'death'
+
+		else:
+			print("There is no command of that choice. Start over.")
+
+			return 'central_corridor'
 
 class Wired_room(Scene):
 
@@ -157,6 +184,22 @@ class Map(object):
 	def opening_scene(self):
 		return self.next_scene(self.start_scene)
 
+class Intro(object):
+
+	def __init__(self):
+		pass
+
+	def explain(self):
+		print("\n---- Wiped ----\n")
+		print("Welcome to my game called 'Wiped'. A game about finding out the truth...")
+		self.name = input("First of all, choose your name: ") # Set a maximun of characters in the name
+		print("Are you ready {}? Press ENTER to start or CTRL-SHIFT-C to quit.".format(self.name))
+		input()
+		print("Let's begin...\n") # Add a delay in here with the time module
+
+
+the_intro = Intro()
+the_intro.explain()
 
 a_map = Map('white_room')
 a_game = Engine(a_map)
