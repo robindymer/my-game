@@ -1,48 +1,8 @@
-"""Game story:
+"""The main game file.
 
-You wake up in a bright white room. You are dizzy and blended 
-but you feel better after a while. You don't remember anything
-and you a trapped in a chair. Now you need to escape, find out
-what's happening and get memory fragments to remember your
-story. You will need to go through rooms, fight bosses,
-collect memory fragments and when you have all of the memory
-fragments, you are ready for the final mission. You will also
-find notes on the way that will tell you things about what's
-happening.
-You are going to have a name, health bar, weapons, abilitys.
-The user is going to be able to get help for knowing that the
-options are, the abilitys he have and the things he can do.
-Try to find good modules for intresting stuff, maybe open gif's
-for different scenes.
-There will be different rooms and each room is going to have an
-own class. You are going to run the game through an engine.
-The person can enter a room only once but he can choose to enter
-the rooms in any order he wants to.
-From LPTHW: Your runner will need to know about these rooms, 
-so make a class that runs them and knows about them. There's 
-plenty of ways to do this, but consider having each room return 
-what room is next or setting a variable of what room is next.
-Plot: Stealing intellectual abilitys, the manager is your father. 
-They did this to create a highly intelligent person who could solver world problems.
-That person is your sister. They needed to transfer it succesive.
+Do indeed enjoy:)
 """
-"""
-* Map 
-    - next_scene
-    - opening_scene
-* Engine
-    - play
-* Scene
-    - Enter
-    - Current scene
-    - Help for that room
-    * Death
-    * White room
-    * Central corridor
-    * Room with people wired in + Memory fragment
-    * Boss with notes that explains things + Memory fragment
-    * Manager + Memory fragment
-"""
+
 from sys import exit
 from random import randint
 
@@ -56,19 +16,20 @@ class Scene(object): # Add things here for the subclasses
 
 class Engine(object): # Running the rooms
 
-    def __init__(self, scene_map):
-        self.scene_map = scene_map
+	def __init__(self, scene_map):
+		self.scene_map = scene_map
 
-    def play(self):
-        current_scene = self.scene_map.opening_scene()
-        last_scene = self.scene_map.next_scene('final_room')
+	def play(self):
+		current_scene = self.scene_map.opening_scene()
+		last_scene = self.scene_map.next_scene('final_room')
 
-        while current_scene != last_scene:
-            next_scene_name = current_scene.enter()
-            current_scene = self.scene_map.next_scene(next_scene_name)
+		while current_scene != last_scene:
+			print(current_scene)
+			next_scene_name = current_scene.enter()
+			current_scene = self.scene_map.next_scene(next_scene_name)
 
-        # be sure to print out the last scene
-        current_scene.enter()
+		# be sure to print out the last scene
+		current_scene.enter()
 
 class White_room(Scene): # Look up a game engine online for inspiration
 
@@ -95,7 +56,7 @@ class White_room(Scene): # Look up a game engine online for inspiration
 			choice = input(prompt)
 
 			if choice == 'flee':
-				return 'central_corridor'
+				return 'wired_room'
 
 			elif choice == 'disarm':
 				return 'death'
