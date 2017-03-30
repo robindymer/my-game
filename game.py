@@ -88,18 +88,18 @@ class Central_corridor(Scene):
 		print("\nYou realize that you need to get of here as quickly as you can. This is not")
 		print("an ordinary hospital")
 		print("You see three doors with different text on each one")
-		print("The first door says 'Wired room', the second door says 'Lab' and the")
-		print("last door says 'Staff'. Which one do you enter?")
+		print("The first door says (wire), the second door says (lab) and the")
+		print("last door says (staff). Which one do you enter?")
 		choice = input(prompt)
 
-		if choice == 'wired room':
-			return 'death'
+		if choice == 'wire':
+			return 'wired_room'
 
 		elif choice == 'lab':
-			return 'death'
+			return 'lab'
 
 		elif choice == 'staff':
-			return 'death'
+			return 'Doctors'
 
 		else:
 			print("There is no command of that choice. Start over.")
@@ -109,7 +109,25 @@ class Central_corridor(Scene):
 class Wired_room(Scene):
 
 	def enter(self):
-		print("You are now in the wired room.")
+		print("You enter the door with the sign that says 'wire'.")
+		print("When you open the door you first notice the enormous size of the room.")
+		print("Then you see a bunch of people laying down in black machines with wires to their head.")
+		print("They are not awake. You become so chocked that you can barely stand on your legs.")
+		print("Poor people. Who have done this? What are they doing do them?")
+		print("You look around and see a desk with a bunch of maps on it.")
+		print("Do you (go) to the maps or (inspect) the machines with the people in it?")
+		choice = input(prompt)
+
+		if choice is 'go':
+			pass
+
+		elif choice is 'inspect':
+			pass
+
+		else:
+			print("There is no command of that choice. Start over.")
+
+			return 'wired_room'
 
 class Lab(Scene):
 	
@@ -193,6 +211,8 @@ class Intro(object):
 		print("\n---- Wiped ----\n")
 		print("Welcome to my game called 'Wiped'. A game about finding out the truth...")
 		self.name = input("First of all, choose your name: ") # Set a maximun of characters in the name
+		self.name = self.name.capitalize()
+
 		print("Are you ready {}? Press ENTER to start or CTRL-SHIFT-C to quit.".format(self.name))
 		input()
 		print("Let's begin...\n") # Add a delay in here with the time module
