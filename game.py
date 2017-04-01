@@ -1,10 +1,10 @@
 """The main game file.
-
 Do indeed enjoy:)
 """
 
 from sys import exit
 from random import randint
+from time import sleep
 
 prompt = '--> '
 
@@ -35,6 +35,8 @@ class White_room(Scene): # Look up a game engine online for inspiration
 		print("You try to get up but you realize in the same moment")
 		print("that you are tied to a chair with handcuffs. What the")
 		print("hell is happening?\n")
+		print("You look down on your arms and they are as white as the room.")
+		print("You also see a number written on your arm, '2'.")
 		print("Someone comes through the door and the first thing you")
 		print("notice is the key chain attached to the persons waist.")
 		print("You then look up and you see that it is a person with white")
@@ -102,14 +104,14 @@ class Central_corridor(Scene):
 			return 'Doctors'
 
 		else:
-			print("There is no command of that choice. Start over.")
+			print("\nThere is no command of that choice. Start over.\n")
 
 			return 'central_corridor'
 
 class Wired_room(Scene):
 
 	def enter(self):
-		print("You enter the door with the sign that says 'wire'.")
+		print("\nYou enter the door with the sign that says 'wire'.")
 		print("When you open the door you first notice the enormous size of the room.")
 		print("Then you see a bunch of people laying down in black machines with wires to their head.")
 		print("They are not awake. You become so chocked that you can barely stand on your legs.")
@@ -118,14 +120,43 @@ class Wired_room(Scene):
 		print("Do you (go) to the maps or (inspect) the machines with the people in it?")
 		choice = input(prompt)
 
-		if choice is 'go':
-			pass
+		if choice == 'go':
+			print("\nYou walk to the desk and pick up one of the papers.")
+			print("You start reading")
+			input()
+			text = open('text.txt').read()
+			
+			for l in text:
+				print(l, end="", flush=True)
+				sleep(0.01)
+			input()
+			print("\nYou look down on your arm and see the same number you saw in the other room, '2'.")
+			print("'What is a transfer, who am I, please let me remember!', you burst out.")
+			print("You suddenly see someone coming through the door. It is a big muscular doctor that is looking down")
+			print("in a folder and going around the machines and checking them.")
+			print("Do you (fight) him or do you (hide)?")
+			choice = input(prompt)
 
-		elif choice is 'inspect':
-			pass
+			if choice == 'fight':
+				return 'fight'
+
+			elif choice == 'hide':
+				print("\nYou throw yourself down on your knees and try to stay quiet, but the pain from")
+				print("hitting the knees hard in the floor makes you scream out in pain. That is not good.")
+				print("Now he sees you and comes charging at you. That is the last thing you ever would remember...")
+
+				return 'death'
+
+			else:
+				print("\nThere is no command of that choice. Start over.\n")
+
+				return 'wired_room'
+
+		elif choice == 'inspect':
+			return 'death'
 
 		else:
-			print("There is no command of that choice. Start over.")
+			print("\nThere is no command of that choice. Start over.\n")
 
 			return 'wired_room'
 
@@ -147,7 +178,7 @@ class Final_room(object):
 class Death(Scene):
 
 	def enter(self):
-		print("Game over.")
+		print("\nGame over.\n")
 		exit(0)
 
 class Boss(object):
@@ -156,8 +187,31 @@ class Boss(object):
 		self.hp = hp
 		self.name = name
 
-	def boss_1(self, weapon):
+	def boss_1(self):
 		self.weapon = 'Shovel'
+
+class Fight(Boss):
+
+	def __init__(self):
+		self.enters = 0
+
+	def enter(self): # Boss parameter? Make it so that you can come back to this scene with different bosses from the boss class
+		self.enters += 1
+		
+		if self.enters == 1:
+			super().boss_1()
+			print("\nBoss number 1...\n")
+			print(self.weapon)
+			input()
+
+		elif self.enters == 2:
+			pass
+
+		elif self.enters == 3:
+			pass
+
+		else:
+			return 'death'
 
 class Hero(object):
 
@@ -189,7 +243,8 @@ class Map(object):
 		'lab': Lab(),
 		'doctors': Doctors(),
 		'final_room': Final_room(),
-		'death': Death()
+		'death': Death(),
+		'fight': Fight()
 		}
     
 	def __init__(self, start_scene):
@@ -204,9 +259,6 @@ class Map(object):
 
 class Intro(object):
 
-	def __init__(self):
-		pass
-
 	def explain(self):
 		print("\n---- Wiped ----\n")
 		print("Welcome to my game called 'Wiped'. A game about finding out the truth...")
@@ -215,14 +267,15 @@ class Intro(object):
 
 		print("Are you ready {}? Press ENTER to start or CTRL-SHIFT-C to quit.".format(self.name))
 		input()
-		print("Let's begin...\n") # Add a delay in here with the time module
+		print("Let's begin", end="") # Add a delay in here with the time module
+		for _ in range(3):
+			print(".", end="", flush=True)
+			sleep(1)
 
 
 the_intro = Intro()
 the_intro.explain()
 
-a_map = Map('white_room')
+a_map = Map('wired_room')
 a_game = Engine(a_map)
 a_game.play()
-
-# Figure out the return thing, make the engine work!
