@@ -323,3 +323,8 @@ the_intro.explain()
 a_map = Map('wired_room')
 a_game = Engine(a_map)
 a_game.play()
+
+# Function Style
+# Class Style
+# Code Style
+# Good Comments
