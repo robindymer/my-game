@@ -1,12 +1,16 @@
 """The main game file.
+
 Do indeed enjoy:)
 """
 
+import webbrowser
 from sys import exit
-from random import randint
+from random import randint, choice
 from time import sleep
 
-prompt = '--> '
+prompt = '->> '
+been_there = ['wired_room', 'lab', 'doctors']
+excepting = ['white_room', 'central_corridor', 'final_room', 'death', 'fight']
 
 class Scene(object): # Add things here for the subclasses
 	
@@ -17,7 +21,17 @@ class Engine(object): # Running the rooms
 	def __init__(self, scene_map):
 		self.scene_map = scene_map
 
+		# if wired_room is in been_there
+		if self.scene_map in been_there:
+			been_there.remove(self.been_there)
+
+		# if wired_room is not in expecting and not in been_there.
+		elif self.scene_map not in been_there and self.scene_map not in excepting:
+			Engine('death').play()
+
 	def play(self):
+		print(self.scene_map)
+		input()
 		current_scene = self.scene_map.opening_scene()
 		last_scene = self.scene_map.next_scene('final_room')
 
@@ -178,17 +192,56 @@ class Final_room(object):
 class Death(Scene):
 
 	def enter(self):
-		print("\nGame over.\n")
+		gif_links = ["https://giphy.com/gifs/love-black-and-white-fail-dkuZHIQsslFfy/tile",
+		             "https://giphy.com/gifs/cat-video-game-xn9yw4QWUiC2Y/tile",
+		             "https://giphy.com/gifs/kawaii-pixel-pixels-WDsyMtVD8ZH7G/tile",
+		             "https://giphy.com/gifs/season-3-the-simpsons-3x8-l2Je1pHtloVlENuJa/tile"]
+
+		print("\nYou died...\n")
+		sleep(1)
+		webbrowser.open(choice(gif_links))
 		exit(0)
 
-class Boss(object):
+class Hero(object): # Put the hero, bosses and everything like that in a module
+
+	def __init__(self, name):
+		self.hero_hp = 100
+		self.hero_name = hero_name
+
+	def eat(self, food):
+		self.food = food
+
+		if self.food == "pie":
+			print("Yummy")
+			self.hero_hp += 20
+
+		elif self.food == "cookie":
+			print("The hero does not like cookies")
+			self.hero_hp -= 10
+
+		else:
+			print("You don't have that item.")
+			# return current_room
+
+class Boss(Hero):
 
 	def __init__(self, hp, name):
 		self.hp = hp
 		self.name = name
 
 	def boss_1(self):
-		self.weapon = 'Shovel'
+		super().__init__()
+		self.hero_hp = hero_hp
+		self.hero_abilitys = {}
+		self.boss_weapon = 'shovel'
+		self.hero_weapon = 'stick'
+
+		if self.hero_weapon == 'stick':
+			self.hero_abilitys = {
+				'poke': randint(15, 25),
+				'throw': randint(25, 30),
+				'hit': randint(10, 15)
+				}
 
 class Fight(Boss):
 
@@ -201,38 +254,29 @@ class Fight(Boss):
 		if self.enters == 1:
 			super().boss_1()
 			print("\nBoss number 1...\n")
-			print(self.weapon)
-			input()
+			print("Boss weapon: {}".format(self.boss_weapon))
+			print("Your weapon: {}".format(self.hero_weapon))
+			print("\nType (abilitys) to get a list of your abilitys.")
 
-		elif self.enters == 2:
-			pass
+			while self.hero_hp < 0 or self.boss_hp < 0:
+				choice = input("Choose ability: ")
 
-		elif self.enters == 3:
-			pass
+				if choice == 'poke':
+					self.boss_hp -= self.hero_abilitys[choice]
+					self.hero_hp -= randint(10, 20)
+					input()
+
+				elif choice == 'throw':
+					pass
+
+				elif choice == 'hit':
+					pass
+
+				elif choice == 'abilitys':
+					print(self.hero_abilitys.items())
 
 		else:
 			return 'death'
-
-class Hero(object):
-
-	def __init__(self, name):
-		self.hp = 100
-		self.name = name
-
-	def eat(self, food):
-		self.food = food
-
-		if self.food == "pie":
-			print("Yummy")
-			self.hp += 20
-
-		elif self.food == "cookie":
-			print("The hero does not like cookies")
-			self.hp -= 10
-
-		else:
-			print("You don't have that item.")
-			# return current_room
 
 class Map(object):
 
