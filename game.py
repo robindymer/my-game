@@ -8,44 +8,13 @@ from sys import exit
 from random import randint, choice
 from time import sleep
 
-# Adding a prompt variable so you can change all the prompts
 prompt = '->> '
-been_there = ['wired_room', 'lab', 'doctors']
-excepting = ['white_room', 'central_corridor', 'final_room', 'death', 'fight']
 
-# Add things here for the subclasses
-class Scene(object):
+class Scene(object): # Add things here for the subclasses
 	
 	pass
 
-# Running the rooms in a loop in the play function
-class Engine(object):
-
-	def __init__(self, scene_map):
-		self.scene_map = scene_map
-
-		# This if - elif is for making sure you don't enter a room twice
-		if self.scene_map in been_there:
-			been_there.remove(self.been_there)
-
-		elif self.scene_map not in been_there and self.scene_map not in excepting:
-			Engine('death').play()
-
-	def play(self):
-		print(self.scene_map)
-		input()
-		current_scene = self.scene_map.opening_scene()
-		last_scene = self.scene_map.next_scene('final_room')
-
-		while current_scene != last_scene:
-			next_scene_name = current_scene.enter()
-			current_scene = self.scene_map.next_scene(next_scene_name)
-
-		# Be sure to print out the last scene
-		current_scene.enter()
-
-# The starting room where the engine will begin running		
-class WhiteRoom(Scene):
+class White_room(Scene): # Look up a game engine online for inspiration
 
 	def enter(self):
 		print("You are dizzy and blended by a strong light source.")
@@ -72,7 +41,6 @@ class WhiteRoom(Scene):
 			choice = input(prompt)
 
 			if choice == 'flee':
-				# Returning the room to the engine that you should enter
 				return 'central_corridor'
 
 			elif choice == 'disarm':
@@ -96,9 +64,9 @@ class WhiteRoom(Scene):
 
 			return 'white_room'
 
-class CentralCorridor(Scene):
+class Central_corridor(Scene):
 
-	def enter(self):
+	def enter(self): # Add your weapon in this class or another one
 		print("\nYou run out and quickly shut the door so she can't come out. Close one.")
 		print("You look around and see a long, white corridor. What is this place?")
 		print("You try to remember why you are here but nothing comes up.")
@@ -126,7 +94,7 @@ class CentralCorridor(Scene):
 
 			return 'central_corridor'
 
-class WiredRoom(Scene):
+class Wired_room(Scene):
 
 	def enter(self):
 		print("\nYou enter the door with the sign that says 'wire'.")
@@ -188,7 +156,7 @@ class Doctors(Scene):
 	def enter(self):
 		print("You are now in the doctors room.")
 
-class FinalRoom(object):
+class Final_room(object):
 	
 	def enter(self):
 		print("You are now in the final room.")
@@ -282,15 +250,30 @@ class Fight(Boss):
 		else:
 			return 'death'
 
+class Intro(object):
+
+	def explain(self):
+		print("\n---- Wiped ----\n")
+		print("Welcome to my game called 'Wiped'. A game about finding out the truth...")
+		self.name = input("First of all, choose your name: ") # Set a maximun of characters in the name
+		self.name = self.name.capitalize()
+
+		print("Are you ready {}? Press ENTER to start or CTRL-SHIFT-C to quit.".format(self.name))
+		input()
+		print("Let's begin", end="") # Add a delay in here with the time module
+		for _ in range(3):
+			print(".", end="", flush=True)
+			sleep(1)
+
 class Map(object):
 
 	scenes = {
-		'white_room': WhiteRoom(),
-		'central_corridor': CentralCorridor(),
-		'wired_room': WiredRoom(),
+		'white_room': White_room(),
+		'central_corridor': Central_corridor(),
+		'wired_room': Wired_room(),
 		'lab': Lab(),
 		'doctors': Doctors(),
-		'final_room': FinalRoom(),
+		'final_room': Final_room(),
 		'death': Death(),
 		'fight': Fight()
 		}
@@ -305,32 +288,42 @@ class Map(object):
 	def opening_scene(self):
 		return self.next_scene(self.start_scene)
 
-# The intro to the game where you will get the players name.
-class Intro(object):
+been_there = [Map('wired_room'), Map('lab'), Map('doctors')]
+excepting = [Map('white_room'), Map('central_corridor'), Map('final_room'), Map('death'), Map('fight')]
 
-	def explain(self):
-		print("\n---- Wiped ----\n")
-		print("Welcome to my game called 'Wiped'. A game about finding out the truth...")
-		self.name = input("First of all, choose your name: ") # Set a maximun of characters in the name
-		self.name = self.name.capitalize()
+class Engine(object): # Running the rooms
 
-		print("Are you ready {}? Press ENTER to start or CTRL-SHIFT-C to quit.".format(self.name))
+	def __init__(self, scene_map):
+		self.scene_map = scene_map
+
+		# if wired_room is in been_there
+		if self.scene_map in been_there:
+			been_there.remove(self.been_there)
+
+		# if wired_room is not in expecting and not in been_there.
+		elif self.scene_map not in been_there and self.scene_map not in excepting:
+			Death().enter()
+
+		else: 
+			pass
+
+	def play(self):
+		print(self.scene_map)
 		input()
-		# Loading bar
-		print("Let's begin", end="")
-		for _ in range(3):
-			print(".", end="", flush=True)
-			sleep(1)
+		current_scene = self.scene_map.opening_scene()
+		last_scene = self.scene_map.next_scene('final_room')
+
+		while current_scene != last_scene:
+			next_scene_name = current_scene.enter()
+			current_scene = self.scene_map.next_scene(next_scene_name)
+
+		# be sure to print out the last scene
+		current_scene.enter()
 
 
 the_intro = Intro()
 the_intro.explain()
 
-a_map = Map('wired_room')
+a_map = Map('white_room')
 a_game = Engine(a_map)
 a_game.play()
-
-# Function Style
-# Class Style
-# Code Style
-# Good Comments
