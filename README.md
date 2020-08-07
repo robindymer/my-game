@@ -1,2 +1,2 @@
-# This is my game
-:))))
+# Simple text game
+A CMD game made with python using classes.
