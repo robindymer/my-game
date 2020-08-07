@@ -1,2 +1,2 @@
 # Simple text game
-A CMD game made with python using classes.
+A game made with python using the webbrowser module.
